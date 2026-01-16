@@ -1,0 +1,743 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Master Class Copilot 2026 | Guide Expert</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            /* Palette Microsoft Copilot & Fluent Design */
+            --copilot-bg: #f3f2f1;
+            --copilot-gradient: linear-gradient(135deg, #7740e6 0%, #3a3b7b 100%);
+            --card-bg: #ffffff;
+            --text-dark: #242424;
+            --text-light: #616161;
+            --success: #107c10;
+            
+            /* Tool Colors */
+            --color-excel: #107c10;
+            --color-ppt: #c43e1c;
+            --color-word: #2b579a;
+            --color-outlook: #0078d4;
+            --color-teams: #6264a7;
+            --color-chat: #7740e6;
+            --color-sharepoint: #03787c;
+            --color-prompting: #d83b01;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+        }
+
+        body {
+            background-color: var(--copilot-bg);
+            color: var(--text-dark);
+            min-height: 100vh;
+        }
+
+        /* Header Hero */
+        header {
+            background: var(--card-bg);
+            padding: 2.5rem 5%;
+            text-align: center;
+            border-bottom: 1px solid #e0e0e0;
+            position: relative;
+            overflow: hidden;
+        }
+
+        header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 5px;
+            background: var(--copilot-gradient);
+        }
+
+        h1 {
+            font-size: 2.8rem;
+            margin-bottom: 0.5rem;
+            background: var(--copilot-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-weight: 800;
+            letter-spacing: -0.5px;
+        }
+
+        p.subtitle {
+            color: var(--text-light);
+            font-size: 1.2rem;
+            max-width: 700px;
+            margin: 0 auto;
+            font-weight: 400;
+        }
+
+        /* Filter Bar */
+        .filter-container {
+            position: sticky;
+            top: 0;
+            background: rgba(243, 242, 241, 0.95);
+            backdrop-filter: blur(12px);
+            z-index: 100;
+            padding: 1.2rem 5%;
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+            flex-wrap: wrap;
+            border-bottom: 1px solid rgba(0,0,0,0.05);
+        }
+
+        .filter-btn {
+            border: 1px solid transparent;
+            background: white;
+            padding: 8px 16px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-weight: 600;
+            color: var(--text-light);
+            transition: all 0.2s ease;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.9rem;
+        }
+
+        .filter-btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.08);
+            color: var(--text-dark);
+        }
+
+        .filter-btn.active {
+            background: var(--text-dark);
+            color: white;
+            border-color: var(--text-dark);
+        }
+
+        /* Tool Specific Active States */
+        .filter-btn[data-filter="Excel"].active { background: var(--color-excel); border-color: var(--color-excel); }
+        .filter-btn[data-filter="PowerPoint"].active { background: var(--color-ppt); border-color: var(--color-ppt); }
+        .filter-btn[data-filter="Word"].active { background: var(--color-word); border-color: var(--color-word); }
+        .filter-btn[data-filter="Outlook"].active { background: var(--color-outlook); border-color: var(--color-outlook); }
+        .filter-btn[data-filter="Chat"].active { background: var(--color-chat); border-color: var(--color-chat); }
+        .filter-btn[data-filter="SharePoint"].active { background: var(--color-sharepoint); border-color: var(--color-sharepoint); }
+        .filter-btn[data-filter="Prompting"].active { background: var(--color-prompting); border-color: var(--color-prompting); }
+
+
+        /* Grid Layout */
+        .grid-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));
+            gap: 25px;
+            padding: 2rem 5%;
+            max-width: 1600px;
+            margin: 0 auto;
+        }
+
+        /* Card Design */
+        .card {
+            background: var(--card-bg);
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+            transition: transform 0.3s cubic-bezier(0.165, 0.84, 0.44, 1), box-shadow 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            border-top: 4px solid transparent;
+            animation: fadeIn 0.4s ease-out;
+            border: 1px solid #f0f0f0;
+        }
+
+        .card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 24px rgba(0,0,0,0.1);
+        }
+
+        /* Tool Specific Card Colors */
+        .card[data-tool="Excel"] { border-top-color: var(--color-excel); }
+        .card[data-tool="PowerPoint"] { border-top-color: var(--color-ppt); }
+        .card[data-tool="Word"] { border-top-color: var(--color-word); }
+        .card[data-tool="Outlook"] { border-top-color: var(--color-outlook); }
+        .card[data-tool="Teams"] { border-top-color: var(--color-teams); }
+        .card[data-tool="Chat"] { border-top-color: var(--color-chat); }
+        .card[data-tool="SharePoint"] { border-top-color: var(--color-sharepoint); }
+        .card[data-tool="Prompting"] { border-top-color: var(--color-prompting); background: #fffcfb; }
+
+        .card-header {
+            padding: 1.2rem 1.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #f5f5f5;
+        }
+
+        .tool-badge {
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: #888;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .card-body {
+            padding: 1.5rem;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .trick-title {
+            font-size: 1.2rem;
+            font-weight: 700;
+            margin-bottom: 0.8rem;
+            color: var(--text-dark);
+            line-height: 1.3;
+        }
+
+        .metric-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: #f0fdf4;
+            color: #166534;
+            border: 1px solid #bbf7d0;
+            padding: 4px 10px;
+            border-radius: 6px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            align-self: flex-start;
+        }
+
+        .description {
+            color: var(--text-light);
+            font-size: 0.95rem;
+            line-height: 1.6;
+            margin-bottom: 1.5rem;
+        }
+
+        .prompt-box {
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 1rem;
+            position: relative;
+            border: 1px solid #e9ecef;
+            margin-top: auto;
+        }
+
+        .prompt-text {
+            font-family: 'Consolas', 'Monaco', monospace;
+            font-size: 0.85rem;
+            color: #495057;
+            margin-bottom: 0.5rem;
+            line-height: 1.5;
+            white-space: pre-wrap;
+        }
+
+        .copy-btn {
+            position: absolute;
+            top: 8px;
+            right: 8px;
+            background: white;
+            border: 1px solid #dee2e6;
+            border-radius: 6px;
+            padding: 4px 8px;
+            cursor: pointer;
+            font-size: 0.75rem;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            color: var(--text-light);
+        }
+
+        .copy-btn:hover {
+            background: var(--text-dark);
+            color: white;
+            border-color: var(--text-dark);
+        }
+
+        .copy-feedback {
+            position: absolute;
+            top: -25px;
+            right: 8px;
+            background: var(--success);
+            color: white;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 0.7rem;
+            opacity: 0;
+            transition: opacity 0.3s;
+            pointer-events: none;
+        }
+
+        .card-footer {
+            padding: 0.8rem 1.5rem;
+            background: #fbfbfb;
+            border-top: 1px solid #f0f0f0;
+            font-size: 0.8rem;
+            color: var(--text-light);
+            display: flex;
+            align-items: flex-start;
+            gap: 8px;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Mobile Responsive */
+        @media (max-width: 768px) {
+            .grid-container {
+                grid-template-columns: 1fr;
+            }
+            header {
+                padding: 2rem 1rem;
+            }
+            h1 {
+                font-size: 2rem;
+            }
+            .filter-container {
+                justify-content: flex-start;
+                overflow-x: auto;
+                padding-bottom: 1rem;
+                -webkit-overflow-scrolling: touch;
+            }
+            .filter-btn {
+                white-space: nowrap;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <h1><i class="fas fa-robot"></i> Guide Master Class Copilot</h1>
+    <p class="subtitle">Votre compagnon expert pour Microsoft 365 Copilot (Janvier 2026). Filtrez par outil pour découvrir les cas d'usage avancés et les règles de prompting.</p>
+</header>
+
+<div class="filter-container" id="filterContainer">
+    <button class="filter-btn active" onclick="filterCards('all')" data-filter="all">Tout</button>
+    <button class="filter-btn" onclick="filterCards('Chat')" data-filter="Chat"><i class="fas fa-comment-dots" style="color: #7740e6;"></i> Chat & App</button>
+    <button class="filter-btn" onclick="filterCards('Excel')" data-filter="Excel"><i class="fas fa-file-excel" style="color: #107c10;"></i> Excel</button>
+    <button class="filter-btn" onclick="filterCards('Word')" data-filter="Word"><i class="fas fa-file-word" style="color: #2b579a;"></i> Word</button>
+    <button class="filter-btn" onclick="filterCards('PowerPoint')" data-filter="PowerPoint"><i class="fas fa-file-powerpoint" style="color: #c43e1c;"></i> PowerPoint</button>
+    <button class="filter-btn" onclick="filterCards('Outlook')" data-filter="Outlook"><i class="fas fa-envelope" style="color: #0078d4;"></i> Outlook</button>
+    <button class="filter-btn" onclick="filterCards('SharePoint')" data-filter="SharePoint"><i class="fas fa-share-alt-square" style="color: #03787c;"></i> SharePoint</button>
+    <button class="filter-btn" onclick="filterCards('Prompting')" data-filter="Prompting"><i class="fas fa-graduation-cap" style="color: #d83b01;"></i> Prompting Rules</button>
+</div>
+
+<div class="grid-container" id="cardsContainer">
+    <!-- Cards will be injected here by JS -->
+</div>
+
+<script>
+    const tricks = [
+        // --- COPILOT CHAT & APP ---
+        {
+            tool: "Chat",
+            title: "Sélecteur de Mode GPT-5",
+            objective: "Choisir la puissance de calcul adaptée à la complexité de la tâche.",
+            gain: "Gain : Pertinence vs Rapidité",
+            prompt: "(Utilisez le sélecteur d'interface) Choisissez 'Réponse rapide' pour les tâches simples ou 'Réflexion approfondie' pour l'analyse stratégique. Prompt : 'Analyse les implications géopolitiques de [Sujet] sur notre supply chain en mode réflexion approfondie.'",
+            icon: "fas fa-brain"
+        },
+        {
+            tool: "Chat",
+            title: "Planification de Prompts",
+            objective: "Automatiser la veille et le reporting récurrent.",
+            gain: "Gain : Automatisation Hebdomadaire",
+            prompt: "(Configurer dans les paramètres de chat) Prompt programmé : 'Chaque lundi à 8h00, résume mes emails non lus du week-end et présente mon calendrier de la semaine en mettant en avant les conflits potentiels.'",
+            icon: "fas fa-calendar-check"
+        },
+        {
+            tool: "Chat",
+            title: "Ancrage Multi-Fichiers",
+            objective: "Analyser conjointement plusieurs sources de données.",
+            gain: "Gain : Synthèse croisée",
+            prompt: "En utilisant les fichiers /Rapport_Ventes_Q4.xlsx et /Strategie_2026.pdf (utilisez le trombone pour lier jusqu'à 5 fichiers), identifie les écarts entre les résultats obtenus et les objectifs stratégiques initiaux.",
+            icon: "fas fa-paperclip"
+        },
+        {
+            tool: "Chat",
+            title: "Instructions Personnalisées",
+            objective: "Configurer un style de réponse permanent (Persona).",
+            gain: "Gain : Cohérence du ton",
+            prompt: "(Dans Paramètres > Personnalisation) 'Réponds toujours de manière professionnelle et concise. Utilise des listes à puces pour les étapes d'action. Adopte le ton d'un consultant senior.'",
+            icon: "fas fa-user-cog"
+        },
+        {
+            tool: "Chat",
+            title: "Création Vidéo (Sora 2)",
+            objective: "Générer une vidéo explicative à partir de texte.",
+            gain: "Gain : Communication visuelle",
+            prompt: "(Dans le module 'Créer') 'Crée une vidéo de 30 secondes expliquant les nouvelles mesures de sécurité incendie. Utilise un ton rassurant et des visuels de bureau moderne. Ajoute une narration vocale professionnelle.'",
+            icon: "fas fa-video"
+        },
+        {
+            tool: "Chat",
+            title: "Interaction Vocale (Work IQ)",
+            objective: "Gérer ses tâches et son agenda sans clavier.",
+            gain: "Gain : Mobilité & Rapidité",
+            prompt: "(Mode vocal) 'Copilot, résume ma journée. Est-ce que j'ai des conflits entre mes réunions et la date limite du projet X ? Propose des créneaux pour travailler sur le dossier Y.'",
+            icon: "fas fa-microphone"
+        },
+
+        // --- EXCEL ---
+        {
+            tool: "Excel",
+            title: "Agent Mode : Nettoyage Data",
+            objective: "Préparer des données brutes pour l'analyse.",
+            gain: "Gain : 80% temps préparation",
+            prompt: "Normalise les dates de la colonne B au format JJ/MM/AAAA. Supprime les doublons basés sur l'ID Client. Remplis les cellules vides de la colonne 'Région' avec 'Inconnu'. Corrige la capitalisation des Noms Propres.",
+            icon: "fas fa-broom"
+        },
+        {
+            tool: "Excel",
+            title: "Analyse de Sentiment",
+            objective: "Qualifier massivement des verbatims clients.",
+            gain: "Gain : Analyse quali instantanée",
+            prompt: "=COPILOT('Analyse le sentiment de ce commentaire (Cellule A2) : Positif, Négatif ou Neutre. Ajoute une courte justification.', A2)",
+            icon: "fas fa-smile-beam"
+        },
+        {
+            tool: "Excel",
+            title: "Modélisation 'What-If'",
+            objective: "Simuler des scénarios financiers complexes.",
+            gain: "Gain : Aide à la décision",
+            prompt: "Simule l'impact d'une augmentation de prix de 5%, 10% et 15% sur le chiffre d'affaires annuel. Génère un tableau comparatif et explique quel scénario maximise la marge sans effondrer le volume.",
+            icon: "fas fa-chart-line"
+        },
+        {
+            tool: "Excel",
+            title: "Dashboard en 1 Clic",
+            objective: "Visualiser les tendances clés d'un jeu de données.",
+            gain: "Gain : Reporting immédiat",
+            prompt: "Construis un tableau de bord complet pour ces données. Inclus des graphiques croisés dynamiques pour les ventes par région, une chronologie (timeline) et des segments (slicers) par catégorie de produit.",
+            icon: "fas fa-tachometer-alt"
+        },
+        {
+            tool: "Excel",
+            title: "Recherche Web Intégrée",
+            objective: "Enrichir les données internes avec des données de marché.",
+            gain: "Gain : Contextualisation",
+            prompt: "Active la recherche web. Trouve les taux de croissance prévisionnels du marché de l'IA pour 2026 par région et ajoute-les dans une nouvelle feuille pour comparer avec nos données internes. Cite tes sources.",
+            icon: "fas fa-globe"
+        },
+        {
+            tool: "Excel",
+            title: "Choix du Modèle (Claude/GPT)",
+            objective: "Varier les perspectives d'analyse logique.",
+            gain: "Gain : Robustesse logique",
+            prompt: "(Via sélecteur Agent Mode) Utilise le modèle Claude pour analyser la logique de cette formule complexe en colonne F et propose une optimisation pour réduire le temps de calcul.",
+            icon: "fas fa-microchip"
+        },
+
+        // --- WORD ---
+        {
+            tool: "Word",
+            title: "Rédaction Assistée par Fichiers",
+            objective: "Générer un document basé sur des sources existantes.",
+            gain: "Gain : Continuité de l'info",
+            prompt: "Rédige un rapport de statut de projet en t'appuyant sur le fichier 'CompteRendu_Reunion.docx' et la présentation 'Roadmap_Q1.pptx'. Structure le document avec : Résumé, Avancées, Bloquants, Prochaines étapes.",
+            icon: "fas fa-file-signature"
+        },
+        {
+            tool: "Word",
+            title: "Mise à Jour Ciblée",
+            objective: "Réécrire un paragraphe spécifique avec de nouvelles données.",
+            gain: "Gain : Précision chirurgicale",
+            prompt: "(Sélectionnez le texte) Mets à jour cette section 'Budget' en utilisant les chiffres du fichier Excel 'Q1_Financials.xlsx' ci-joint. Garde le ton actuel mais actualise les montants.",
+            icon: "fas fa-sync-alt"
+        },
+        {
+            tool: "Word",
+            title: "Transformation de Structure",
+            objective: "Changer le format de l'information pour la clarté.",
+            gain: "Gain : Lisibilité",
+            prompt: "Transforme cette liste de paragraphes descriptifs en un tableau structuré avec les colonnes : Fonctionnalité, Avantage, Cible, Priorité.",
+            icon: "fas fa-table"
+        },
+        {
+            tool: "Word",
+            title: "Correction & Style",
+            objective: "Améliorer la qualité rédactionnelle.",
+            gain: "Gain : Professionnalisme",
+            prompt: "Corrige l'orthographe et la grammaire de ce texte. Ensuite, propose trois reformulations pour rendre le ton plus formel et plus convaincant pour une audience exécutive.",
+            icon: "fas fa-spell-check"
+        },
+        {
+            tool: "Word",
+            title: "Documents Interactifs",
+            objective: "Créer des outils de travail dynamiques.",
+            gain: "Gain : Suivi opérationnel",
+            prompt: "Génère une checklist de lancement de projet sous forme de tableau interactif. Inclus des colonnes pour : Tâche, Responsable, Date limite et une case à cocher 'Fait'.",
+            icon: "fas fa-tasks"
+        },
+
+        // --- POWERPOINT ---
+        {
+            tool: "PowerPoint",
+            title: "Word vers Slides",
+            objective: "Convertir un rapport écrit en présentation visuelle.",
+            gain: "Gain : 1h de mise en forme",
+            prompt: "Crée une présentation à partir du fichier Word ci-joint. Utilise les titres H1 pour les diapositives de section et les H2 pour le contenu. Génère des visuels pertinents pour chaque point clé.",
+            icon: "fas fa-file-import"
+        },
+        {
+            tool: "PowerPoint",
+            title: "Mode Créatif",
+            objective: "Sortir des designs corporatifs classiques.",
+            gain: "Gain : Impact visuel",
+            prompt: "(Mode Créatif) Génère une présentation sur 'Le Futur du Travail' avec un style visuel 'Cartoon' ou 'Cyberpunk'. Rends la narration engageante et inspirante.",
+            icon: "fas fa-paint-brush"
+        },
+        {
+            tool: "PowerPoint",
+            title: "Traduction Instantanée",
+            objective: "Localiser une présentation entière.",
+            gain: "Gain : Internationalisation",
+            prompt: "Traduis cette présentation entière en Espagnol. Conserve la mise en page exacte et adapte les devises si nécessaire.",
+            icon: "fas fa-language"
+        },
+        {
+            tool: "PowerPoint",
+            title: "Édition d'Images IA",
+            objective: "Retoucher les visuels sans quitter PPT.",
+            gain: "Gain : Design autonome",
+            prompt: "(Sélectionnez une image) Supprime l'arrière-plan de cette image, améliore la qualité (Autoenhance) et applique un effet de flou artistique sur les bords.",
+            icon: "fas fa-image"
+        },
+        {
+            tool: "PowerPoint",
+            title: "Notes de l'Orateur",
+            objective: "Préparer le pitch oral.",
+            gain: "Gain : Aisance oratoire",
+            prompt: "Génère des notes de présentation pour toutes les diapositives. Calibre le texte pour environ 45 secondes de parole par slide. Adopte un ton conversationnel.",
+            icon: "fas fa-comment-alt"
+        },
+        {
+            tool: "PowerPoint",
+            title: "Explication de Diapositive",
+            objective: "Comprendre rapidement une slide complexe.",
+            gain: "Gain : Compréhension rapide",
+            prompt: "(Clic droit sur la slide) Explique le contenu de cette diapositive, résume les points clés et dis-moi comment elle s'articule avec la slide précédente.",
+            icon: "fas fa-info-circle"
+        },
+
+        // --- SHAREPOINT ---
+        {
+            tool: "SharePoint",
+            title: "Analyse 'Content Gap'",
+            objective: "Identifier les besoins d'information non comblés.",
+            gain: "Gain : Pertinence Intranet",
+            prompt: "(Agent Knowledge) Identifie les termes recherchés par les utilisateurs sur ce site qui n'ont donné aucun résultat pertinent. Suggère des sujets de nouvelles pages pour combler ces manques.",
+            icon: "fas fa-search-minus"
+        },
+        {
+            tool: "SharePoint",
+            title: "Métadonnées Automatiques",
+            objective: "Organiser les bibliothèques documentaires.",
+            gain: "Gain : Classement auto",
+            prompt: "Analyse les documents de cette bibliothèque. Génère automatiquement des colonnes de métadonnées pour : 'Type de Document', 'Département concerné' et 'Année fiscale'.",
+            icon: "fas fa-tags"
+        },
+        {
+            tool: "SharePoint",
+            title: "Nettoyage de Site",
+            objective: "Maintenir l'hygiène du contenu.",
+            gain: "Gain : Fraîcheur de l'info",
+            prompt: "Identifie toutes les pages de ce site qui n'ont pas été consultées depuis plus de 6 mois. Suggère de les 'retraiter' (dépublier) ou de les archiver.",
+            icon: "fas fa-recycle"
+        },
+        {
+            tool: "SharePoint",
+            title: "Réparation Liens Brisés",
+            objective: "Améliorer l'expérience utilisateur.",
+            gain: "Gain : Maintenance UX",
+            prompt: "Scanne le site pour détecter les liens morts (404). Propose des redirections automatiques vers les pages les plus pertinentes actuelles.",
+            icon: "fas fa-link"
+        },
+        {
+            tool: "SharePoint",
+            title: "Création Page Assistée",
+            objective: "Publier du contenu riche rapidement.",
+            gain: "Gain : Publication éclair",
+            prompt: "Crée une page SharePoint complète à partir de ce document Word 'Politique_RH.docx'. Génère la mise en page avec des sections, intègre des images pertinentes et configure les parties extensibles.",
+            icon: "fas fa-columns"
+        },
+
+        // --- PROMPTING RULES (MASTERCLASS) ---
+        {
+            tool: "Prompting",
+            title: "Règle 1 : Ton Collaboratif",
+            objective: "Engager l'IA comme un partenaire.",
+            gain: "Qualité de l'interaction",
+            prompt: "Agis comme un collègue expert en marketing. Nous allons travailler ensemble sur...",
+            icon: "fas fa-handshake"
+        },
+        {
+            tool: "Prompting",
+            title: "Règle 2 : Être Explicite",
+            objective: "Lever toute ambiguïté.",
+            gain: "Précision du résultat",
+            prompt: "Formule : Verbe d'action (Rédige) + Quantité (3 paragraphes) + Audience (pour le Comex).",
+            icon: "fas fa-bullseye"
+        },
+        {
+            tool: "Prompting",
+            title: "Règle 3 : Définir les Limites",
+            objective: "Cadrer la réponse.",
+            gain: "Gain de temps (moins d'édits)",
+            prompt: "Ne dépasse pas 500 mots. N'utilise pas de jargon technique. Exclus les exemples antérieurs à 2024.",
+            icon: "fas fa-ruler-combined"
+        },
+        {
+            tool: "Prompting",
+            title: "Règle 4 : Procéder par Étapes",
+            objective: "Gérer la complexité.",
+            gain: "Qualité structurelle",
+            prompt: "Étape 1 : Propose un plan détaillé. Attends ma validation. Étape 2 : Rédige la première section.",
+            icon: "fas fa-shoe-prints"
+        },
+        {
+            tool: "Prompting",
+            title: "Règle 5 : Exiger une Structure",
+            objective: "Faciliter la lecture.",
+            gain: "Exploitabilité",
+            prompt: "Présente ta réponse sous forme de tableau avec les colonnes : [Critère A], [Critère B], [Impact].",
+            icon: "fas fa-th-list"
+        },
+        {
+            tool: "Prompting",
+            title: "Règle 6 : Expliquer le 'Pourquoi'",
+            objective: "Donner du contexte.",
+            gain: "Pertinence",
+            prompt: "Je te demande cela car nous cherchons à convaincre des investisseurs sceptiques sur la tech.",
+            icon: "fas fa-lightbulb"
+        },
+        {
+            tool: "Prompting",
+            title: "Règle 7 : Contrôler la Longueur",
+            objective: "Adapter au format.",
+            gain: "Densité d'information",
+            prompt: "Utilise le mode 'Bref' pour une lecture en 30 secondes. Ou le mode 'Expert' pour une analyse exhaustive.",
+            icon: "fas fa-text-height"
+        },
+        {
+            tool: "Prompting",
+            title: "Règle 8 : Fournir un Modèle (Scaffolding)",
+            objective: "Guider le format de sortie.",
+            gain: "Conformité",
+            prompt: "Utilise cette structure pour ta réponse : [Introduction] -> [3 Arguments Clés] -> [Conclusion avec Appel à l'action].",
+            icon: "fas fa-project-diagram"
+        },
+        {
+            tool: "Prompting",
+            title: "Règle 9 : Phrases de Pouvoir",
+            objective: "Activer le raisonnement logique.",
+            gain: "Profondeur d'analyse",
+            prompt: "Réfléchis étape par étape. Analyse les pour et les contre avant de conclure.",
+            icon: "fas fa-rocket"
+        },
+        {
+            tool: "Prompting",
+            title: "Règle 10 : Diviser pour Régner",
+            objective: "Gérer les tâches lourdes.",
+            gain: "Fiabilité",
+            prompt: "Ne traite pas tout le rapport d'un coup. Commençons par l'analyse financière, puis nous ferons l'analyse RH.",
+            icon: "fas fa-cut"
+        }
+    ];
+
+    const cardsContainer = document.getElementById('cardsContainer');
+    const filterButtons = document.querySelectorAll('.filter-btn');
+
+    function renderCards(filter = 'all') {
+        cardsContainer.innerHTML = '';
+        
+        const filteredTricks = filter === 'all' 
+            ? tricks 
+            : tricks.filter(t => t.tool === filter);
+
+        filteredTricks.forEach((trick, index) => {
+            const card = document.createElement('div');
+            card.className = 'card';
+            card.setAttribute('data-tool', trick.tool);
+            card.style.animationDelay = `${index * 0.03}s`; // Stagger animation
+
+            card.innerHTML = `
+                <div class="card-header">
+                    <span class="tool-badge">
+                        <i class="${trick.icon}"></i> ${trick.tool}
+                    </span>
+                    <i class="fas fa-ellipsis-h" style="color:#e0e0e0"></i>
+                </div>
+                <div class="card-body">
+                    <h3 class="trick-title">${trick.title}</h3>
+                    <div class="metric-badge">
+                        ${trick.gain}
+                    </div>
+                    <p class="description">
+                        <strong>Objectif :</strong> ${trick.objective}
+                    </p>
+                    <div class="prompt-box">
+                        <div class="copy-feedback">Copié !</div>
+                        <button class="copy-btn" onclick="copyToClipboard(this)">
+                            <i class="far fa-copy"></i> Copier
+                        </button>
+                        <div class="prompt-text">${trick.prompt}</div>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <i class="fas fa-info-circle" style="color: var(--color-${trick.tool.toLowerCase()});"></i>
+                    <span>Conseil Pro : Adaptez le contexte entre [crochets].</span>
+                </div>
+            `;
+            cardsContainer.appendChild(card);
+        });
+    }
+
+    function filterCards(tool) {
+        // Update active button state
+        filterButtons.forEach(btn => btn.classList.remove('active'));
+        
+        // Find the button that was clicked or corresponds to the filter
+        const activeButton = document.querySelector(`.filter-btn[data-filter="${tool}"]`);
+        if(activeButton) activeButton.classList.add('active');
+        
+        // Render cards
+        renderCards(tool);
+    }
+
+    function copyToClipboard(button) {
+        const text = button.nextElementSibling.innerText;
+        navigator.clipboard.writeText(text).then(() => {
+            const feedback = button.previousElementSibling;
+            feedback.style.opacity = '1';
+            feedback.style.top = '-30px';
+            
+            setTimeout(() => {
+                feedback.style.opacity = '0';
+                feedback.style.top = '-25px';
+            }, 2000);
+        });
+    }
+
+    // Initial render
+    renderCards();
+
+</script>
+
+</body>
+</html>
